@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Super Admin",
+    "email": "admin@kantinku.id",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "name": "Pak Budi",
+    "email": "budi@kantinku.id",
+    "role": "merchant"
+  },
+  {
+    "id": 3,
+    "name": "Bu Sari",
+    "email": "sari@kantinku.id",
+    "role": "merchant"
+  },
+  {
+    "id": 4,
+    "name": "Mas Joko",
+    "email": "joko@kantinku.id",
+    "role": "merchant"
+  },
+  {
+    "id": 5,
+    "name": "Andi Mahasiswa",
+    "email": "andi@student.ac.id",
+    "role": "customer"
+  },
+  {
+    "id": 6,
+    "name": "Siti Mahasiswi",
+    "email": "siti@student.ac.id",
+    "role": "customer"
+  },
+  {
+    "id": 7,
+    "name": "Ibra Nuryaman",
+    "email": "Ibranuryamanwebandpayment@gmail.com",
+    "role": "customer"
+  },
+  {
+    "id": 8,
+    "name": "bu indah",
+    "email": "Ibranuryamanwork@gmail.com",
+    "role": "merchant"
+  }
+]

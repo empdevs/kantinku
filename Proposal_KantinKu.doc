@@ -1,0 +1,89 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>Proposal KantinKu</title>
+<style>
+  body { font-family: 'Times New Roman', serif; line-height: 1.5; font-size: 12pt; margin: 40px; }
+  h1 { font-size: 18pt; text-align: center; text-transform: uppercase; margin-bottom: 20px; }
+  h2 { font-size: 14pt; margin-top: 20px; border-bottom: 1px solid #000; padding-bottom: 5px; }
+  h3 { font-size: 12pt; font-weight: bold; margin-top: 15px; }
+  p, li { text-align: justify; }
+  ul { margin-top: 5px; margin-bottom: 15px; }
+</style>
+</head>
+<body>
+
+<h1>PROPOSAL PENGEMBANGAN SISTEM: KANTINKU<br/>(Campus Food Ordering System – Pickup Only)</h1>
+
+<h2>1. LATAR BELAKANG</h2>
+<p>Lingkungan kampus yang dinamis dengan mahasiswa yang memiliki jadwal padat menuntut efisiensi waktu, termasuk dalam hal memesan makanan di kantin. Saat jam istirahat, kantin sering kali mengalami antrean panjang yang membuat mahasiswa kehilangan waktu berharga.</p>
+<p>Aplikasi <b>KantinKu</b> hadir sebagai solusi <i>Campus Food Ordering System</i> berbasis web dengan sistem <i>Pickup Only</i> (pesan dan ambil sendiri tanpa layanan pesan antar). Platform ini dirancang khusus untuk memfasilitasi mahasiswa dalam memesan makanan dari berbagai kedai di berbagai area kantin kampus (Kantin Belakang, Kantin Basement, Kantin Masjid, dll) dengan jadwal ambil yang fleksibel, sehingga mahasiswa tidak perlu mengantre.</p>
+
+<h2>2. TUJUAN</h2>
+<ul>
+  <li>Memberikan kemudahan bagi mahasiswa untuk memesan makanan secara <i>online</i> dan menjemput pesanan tanpa harus mengantre panjang.</li>
+  <li>Membantu pemilik kedai/merchant dalam manajemen pesanan, sehingga dapat melayani pelanggan secara lebih terorganisasi dan efisien.</li>
+  <li>Menciptakan ekosistem sentralisasi untuk seluruh penjual di berbagai lokasi/area kantin kampus.</li>
+</ul>
+
+<h2>3. DESKRIPSI SISTEM & RUANG LINGKUP</h2>
+<p>Sistem yang diajukan merupakan platform berbasis Web Marketplace untuk makanan dan minuman dengan spesifikasi dasar sebagai berikut:</p>
+<ul>
+  <li><b>Platform:</b> Web Application (Responsive/Mobile-Friendly).</li>
+  <li><b>Model Layanan:</b> Pemesanan (Order) dan Pengambilan Sendiri (Pickup Only). Tanpa fitur Delivery / Kurir.</li>
+  <li><b>Multi-Location:</b> Sistem memisahkan daftar kedai berdasarkan titik lokasi kantin (Area Kantin). Kedai wajib terhubung dengan satu Area saat didaftarkan.</li>
+</ul>
+<p>Sistem mendukung <b>3 Role/Hak Akses</b> utama:</p>
+<ol>
+  <li><b>Admin Pusat</b> (Pengelola platform keseluruhan)</li>
+  <li><b>Merchant</b> (Pemilik Kedai/Stan makanan)</li>
+  <li><b>Customer</b> (Mahasiswa/Dosen pembeli)</li>
+</ol>
+
+<h2>4. FITUR UTAMA SISTEM</h2>
+<h3>4.1. Role Admin</h3>
+<ul>
+  <li><b>Dashboard Analytics:</b> Melihat total transaksi, jumlah area kantin paling ramai, dan kedai yang aktif.</li>
+  <li><b>Manajemen User:</b> Melakukan CRUD (Create, Read, Update, Delete) pada pengguna sistem.</li>
+  <li><b>Manajemen Master Data:</b> Mengelola daftar nama Area Kantin.</li>
+  <li><b>Verifikasi Merchant:</b> Meninjau dan memverifikasi pendaftaran akun kedai baru.</li>
+</ul>
+
+<h3>4.2. Role Merchant (Pemilik Kedai)</h3>
+<ul>
+  <li><b>Manajemen Kedai & Jadwal:</b> Mengatur profil kedai, jam buka/tutup, dan area lokasi kantin.</li>
+  <li><b>Manajemen Menu Makanan/Minuman:</b> Melakukan CRUD menu beserta gambar, deskripsi, harga, dan ketersediaan stok.</li>
+  <li><b>Manajemen Pesanan Real-time:</b> Menerima notifikasi pesanan masuk, memperbarui status pesanan menjadi "Diproses" dan "Siap Diambil".</li>
+  <li><b>Riwayat & Laporan:</b> Melihat data riwayat transaksi penjualan harian.</li>
+</ul>
+
+<h3>4.3. Role Customer (Mahasiswa)</h3>
+<ul>
+  <li><b>Eksplorasi & Pencarian:</b> Mencari kedai berdasarkan lokasi/area kantin atau kategori makanan.</li>
+  <li><b>Sistem Keranjang (Cart):</b> Memilih menu, menentukan jumlah, dan menambahkannya ke keranjang.</li>
+  <li><b>Pickup Scheduling & Checkout:</b> Melakukan checkout pesanan dan memilih waktu estimasi pengambilan makanan (<i>pickup time</i>).</li>
+  <li><b>Live Status Tracking:</b> Memantau status pesanan secara waktu-nyata (Pending → Diproses → Siap Diambil → Selesai).</li>
+</ul>
+
+<h3>4.4. Fitur Tambahan (Opsional)</h3>
+<ul>
+  <li>Rating dan Ulasan (Review) terhadap layanan kedai dan menu makanan.</li>
+  <li>Implementasi integrasi QR Code saat pengambilan makanan (<i>pickup</i>).</li>
+  <li>Fitur promo diskon khusus mahasiswa.</li>
+</ul>
+
+<h2>5. SPESIFIKASI TEKNIS PENGEMBANGAN</h2>
+<p>Untuk menjamin skalabilitas dan performa aplikasi, pengembangan akan menggunakan tumpukan teknologi modern (<i>Modern Tech Stack</i>):</p>
+<ul>
+  <li><b>Frontend:</b> React.js / Vite (SPA - Single Page Application)</li>
+  <li><b>Backend:</b> Node.js (Express.js) menggunakan arsitektur MVC / REST API</li>
+  <li><b>Database:</b> SQLite (Environment Development) / MySQL & PostgreSQL (Production)</li>
+  <li><b>Autentikasi & Keamanan:</b> JSON Web Token (JWT) dan Bcrypt hashing.</li>
+  <li><b>Desain Antarmuka:</b> Custom CSS/TailwindCSS dengan desain modular yang elegan dan responsif.</li>
+</ul>
+
+<h2>6. PENUTUP</h2>
+<p>Melalui proposal pengembangan <b>Sistem KantinKu</b>, diharapkan tata kelola kantin di lingkungan kampus dapat berubah ke arah digital yang interaktif dan informatif. Mahasiswa tidak perlu lagi kesulitan mencari makan di tengah padatnya sesi perkuliahan, dan para pengelola kedai dapat meningkatkan pelayanan sekaligus menaikkan taraf pendapatannya berkat manajemen yang baik.</p>
+
+</body>
+</html>

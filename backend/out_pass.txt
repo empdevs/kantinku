@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "email": "admin@kantinku.id",
+    "password": "$2b$10$hSR7T.wQPjlodulUFa2TquneCB.OTvU01g519vwVZSOOwsB7Y.SSe"
+  },
+  {
+    "id": 2,
+    "email": "budi@kantinku.id",
+    "password": "$2b$10$hSR7T.wQPjlodulUFa2TquneCB.OTvU01g519vwVZSOOwsB7Y.SSe"
+  },
+  {
+    "id": 3,
+    "email": "sari@kantinku.id",
+    "password": "$2b$10$hSR7T.wQPjlodulUFa2TquneCB.OTvU01g519vwVZSOOwsB7Y.SSe"
+  },
+  {
+    "id": 4,
+    "email": "joko@kantinku.id",
+    "password": "$2b$10$hSR7T.wQPjlodulUFa2TquneCB.OTvU01g519vwVZSOOwsB7Y.SSe"
+  },
+  {
+    "id": 5,
+    "email": "andi@student.ac.id",
+    "password": "$2b$10$hSR7T.wQPjlodulUFa2TquneCB.OTvU01g519vwVZSOOwsB7Y.SSe"
+  },
+  {
+    "id": 6,
+    "email": "siti@student.ac.id",
+    "password": "$2b$10$hSR7T.wQPjlodulUFa2TquneCB.OTvU01g519vwVZSOOwsB7Y.SSe"
+  },
+  {
+    "id": 7,
+    "email": "Ibranuryamanwebandpayment@gmail.com",
+    "password": "$2b$10$hSR7T.wQPjlodulUFa2TquneCB.OTvU01g519vwVZSOOwsB7Y.SSe"
+  },
+  {
+    "id": 8,
+    "email": "Ibranuryamanwork@gmail.com",
+    "password": "$2b$10$hSR7T.wQPjlodulUFa2TquneCB.OTvU01g519vwVZSOOwsB7Y.SSe"
+  }
+]
