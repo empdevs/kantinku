@@ -147,10 +147,12 @@ CREATE TABLE IF NOT EXISTS balasan_admin (
 -- ─────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS ulasan_kedai (
   id           INT AUTO_INCREMENT PRIMARY KEY,
-  customer_id  INT NOT NULL,
+  customer_id  INT NULL,                        -- NULL jika guest
   kedai_id     INT NOT NULL,
-  order_id     INT NOT NULL,
-  menu_item_id INT,                         -- opsional (jika review spesifik menu)
+  order_id     INT NULL,                        -- NULL jika guest
+  nama_guest   VARCHAR(100),                    -- Untuk review tanpa login
+  no_telp_guest VARCHAR(20),                     -- Untuk review tanpa login
+  menu_item_id INT,                             -- opsional (jika review spesifik menu)
   rating       TINYINT CHECK (rating BETWEEN 1 AND 5),
   komentar     TEXT NOT NULL,
   created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

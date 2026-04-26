@@ -153,12 +153,15 @@ const getOrders = async (req, res) => {
   try {
     const [kedai] = await pool.query('SELECT id FROM kedai WHERE merchant_id = ?', [req.user.id]);
     if (kedai.length === 0) return res.json([]);
-    const ids = kedai.map(k => k.id).join(',');
+    
+    const ids = kedai.map(k => k.id);
+    // Gunakan placeholder (?) untuk keamanan dan konsistensi tipe data
     const [rows] = await pool.query(`
       SELECT o.*, u.name AS customer_name, u.phone AS customer_phone
       FROM orders o JOIN users u ON u.id = o.customer_id
-      WHERE o.kedai_id IN (${ids})
-      ORDER BY o.created_at DESC`);
+      WHERE o.kedai_id IN (?)
+      ORDER BY o.created_at DESC`, [ids]);
+
     for (const order of rows) {
       const [items] = await pool.query(
         'SELECT oi.*, m.name AS menu_name FROM order_items oi JOIN menu_items m ON m.id = oi.menu_item_id WHERE oi.order_id = ?',
@@ -167,6 +170,7 @@ const getOrders = async (req, res) => {
     }
     res.json(rows);
   } catch (err) {
+    console.error('getOrders error:', err.message);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
@@ -233,19 +237,23 @@ const getStats = async (req, res) => {
   try {
     const [kedai] = await pool.query('SELECT id FROM kedai WHERE merchant_id = ?', [req.user.id]);
     if (kedai.length === 0) return res.json({ today: 0, week: 0, month: 0, revenue: 0, pending: 0 });
-    const ids = kedai.map(k => k.id).join(',');
+    
+    const ids = kedai.map(k => k.id);
+
     const [[{ today }]]   = await pool.query(
-      `SELECT COUNT(*) AS today FROM orders WHERE kedai_id IN (${ids}) AND DATE(created_at) = CURDATE()`);
+      `SELECT COUNT(*) AS today FROM orders WHERE kedai_id IN (?) AND DATE(created_at) = CURDATE()`, [ids]);
     const [[{ week }]]    = await pool.query(
-      `SELECT COUNT(*) AS week FROM orders WHERE kedai_id IN (${ids}) AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)`);
+      `SELECT COUNT(*) AS week FROM orders WHERE kedai_id IN (?) AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)`, [ids]);
     const [[{ month }]]   = await pool.query(
-      `SELECT COUNT(*) AS month FROM orders WHERE kedai_id IN (${ids}) AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())`);
+      `SELECT COUNT(*) AS month FROM orders WHERE kedai_id IN (?) AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())`, [ids]);
     const [[{ revenue }]] = await pool.query(
-      `SELECT COALESCE(SUM(total_price),0) AS revenue FROM orders WHERE kedai_id IN (${ids}) AND status='selesai'`);
+      `SELECT COALESCE(SUM(total_price),0) AS revenue FROM orders WHERE kedai_id IN (?) AND status='selesai'`, [ids]);
     const [[{ pending }]] = await pool.query(
-      `SELECT COUNT(*) AS pending FROM orders WHERE kedai_id IN (${ids}) AND status='pending'`);
+      `SELECT COUNT(*) AS pending FROM orders WHERE kedai_id IN (?) AND status='pending'`, [ids]);
+
     res.json({ today, week, month, revenue, pending });
   } catch (err) {
+    console.error('getStats error:', err.message);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };

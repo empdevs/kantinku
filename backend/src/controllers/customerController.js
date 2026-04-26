@@ -23,14 +23,24 @@ const getKedai = async (req, res) => {
   const { kantin_area_id, search } = req.query;
   try {
     let sql = `
-      SELECT k.*, ka.name AS kantin_name, u.name AS merchant_name
+      SELECT DISTINCT k.*, ka.name AS kantin_name, u.name AS merchant_name
       FROM kedai k
-      JOIN kantin_areas ka ON ka.id = k.kantin_area_id
-      JOIN users u ON u.id = k.merchant_id
+      LEFT JOIN kantin_areas ka ON ka.id = k.kantin_area_id
+      LEFT JOIN users u ON u.id = k.merchant_id
+      LEFT JOIN menu_items mi ON mi.kedai_id = k.id
       WHERE k.is_active = 1 AND k.is_verified = 1`;
+    
     const params = [];
-    if (kantin_area_id) { sql += ' AND k.kantin_area_id = ?'; params.push(kantin_area_id); }
-    if (search)         { sql += ' AND k.name LIKE ?';        params.push(`%${search}%`); }
+    if (kantin_area_id) { 
+      sql += ' AND k.kantin_area_id = ?'; 
+      params.push(kantin_area_id); 
+    }
+    
+    if (search) { 
+      sql += ' AND (k.name LIKE ? OR mi.name LIKE ?)'; 
+      params.push(`%${search}%`, `%${search}%`); 
+    }
+    
     sql += ' ORDER BY k.rating DESC';
     const [rows] = await pool.query(sql, params);
     res.json(rows);
@@ -44,37 +54,78 @@ const getKedai = async (req, res) => {
 // Termasuk menu + ulasan_kedai + balasan_kedai
 // ─────────────────────────────────────────────────────────────────
 const getKedaiDetail = async (req, res) => {
+  const { id } = req.params;
+  console.log(`[GET] /api/kedai/${id} - Fetching kedai detail...`);
+
   try {
-    const [kedai] = await pool.query(`
+    // 1. Ambil data kedai
+    const [kedaiRows] = await pool.query(`
       SELECT k.*, ka.name AS kantin_name, u.name AS merchant_name
       FROM kedai k
-      JOIN kantin_areas ka ON ka.id = k.kantin_area_id
-      JOIN users u ON u.id = k.merchant_id
-      WHERE k.id = ?`, [req.params.id]);
-    if (kedai.length === 0) return res.status(404).json({ message: 'Kedai tidak ditemukan' });
+      LEFT JOIN kantin_areas ka ON ka.id = k.kantin_area_id
+      LEFT JOIN users u ON u.id = k.merchant_id
+      WHERE k.id = ?`, [id]);
 
-    const [menu] = await pool.query(
-      'SELECT * FROM menu_items WHERE kedai_id = ? AND is_available = 1 ORDER BY category',
-      [req.params.id]);
+    if (kedaiRows.length === 0) {
+      console.log(`[GET] /api/kedai/${id} - Kedai not found`);
+      return res.status(404).json({ message: `Kedai dengan ID ${id} tidak ditemukan.` });
+    }
 
-    // Ambil ulasan beserta balasan kedai (thread)
-    const [reviews] = await pool.query(`
-      SELECT
-        uk.id, uk.rating, uk.komentar, uk.created_at,
-        u.name AS customer_name,
-        CASE WHEN uk.menu_item_id IS NOT NULL THEN m.name ELSE NULL END AS menu_name,
-        bk.balasan AS balasan_kedai, bk.created_at AS balasan_at
-      FROM ulasan_kedai uk
-      JOIN users u ON u.id = uk.customer_id
-      LEFT JOIN menu_items m ON m.id = uk.menu_item_id
-      LEFT JOIN balasan_kedai bk ON bk.ulasan_kedai_id = uk.id
-      WHERE uk.kedai_id = ?
-      ORDER BY uk.created_at DESC
-      LIMIT 20`, [req.params.id]);
+    const kedaiId = parseInt(id);
+    const kedai = kedaiRows[0];
+    console.log(`[GET] /api/kedai/${id} - Kedai found: ${kedai.name}`);
 
-    res.json({ ...kedai[0], menu, reviews });
+    // 2. Ambil data menu (robust fetch)
+    let menu = [];
+    try {
+      const [menuRows] = await pool.query(
+        'SELECT * FROM menu_items WHERE kedai_id = ? AND is_available = 1 ORDER BY category',
+        [kedaiId]);
+      menu = menuRows;
+
+      if (menu.length === 0) {
+        console.log(`[GET] /api/kedai/${id} - No available menu, trying to fetch all menu items...`);
+        const [allMenuRows] = await pool.query(
+          'SELECT * FROM menu_items WHERE kedai_id = ? ORDER BY category',
+          [kedaiId]);
+        menu = allMenuRows;
+      }
+      console.log(`[GET] /api/kedai/${id} - Menu items found: ${menu.length}`);
+    } catch (menuErr) {
+      console.error(`[GET] /api/kedai/${id} - Error fetching menu:`, menuErr.message);
+    }
+
+    // 3. Ambil data ulasan (robust fetch)
+    let reviews = [];
+    try {
+      const [reviewRows] = await pool.query(`
+        SELECT
+          uk.id, uk.rating, uk.komentar, uk.created_at,
+          COALESCE(u.name, uk.nama_guest, 'Pelanggan') AS customer_name,
+          uk.nama_guest, uk.no_telp_guest,
+          CASE WHEN uk.menu_item_id IS NOT NULL THEN m.name ELSE NULL END AS menu_name,
+          bk.balasan AS balasan_kedai, bk.created_at AS balasan_at
+        FROM ulasan_kedai uk
+        LEFT JOIN users u ON u.id = uk.customer_id
+        LEFT JOIN menu_items m ON m.id = uk.menu_item_id
+        LEFT JOIN balasan_kedai bk ON bk.ulasan_kedai_id = uk.id
+        WHERE uk.kedai_id = ?
+        ORDER BY uk.created_at DESC
+        LIMIT 20`, [kedaiId]);
+      reviews = reviewRows;
+      console.log(`[GET] /api/kedai/${id} - Reviews found: ${reviews.length}`);
+    } catch (revErr) {
+      console.error(`[GET] /api/kedai/${id} - Error fetching reviews:`, revErr.message);
+    }
+
+    res.json({ ...kedai, menu, reviews });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error(`[GET] /api/kedai/${id} - Critical Error:`, err);
+    res.status(500).json({
+      message: 'Gagal memuat detail kedai.',
+      error: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
   }
 };
 
@@ -128,7 +179,7 @@ const createOrder = async (req, res) => {
     await conn.query(
       'INSERT INTO notifications (user_id, order_id, message) VALUES (?, ?, ?)',
       [req.user.id, orderResult.insertId,
-       `⏳ Pesanan #${order_code} dikirim — menunggu konfirmasi kedai`]);
+      `⏳ Pesanan #${order_code} dikirim — menunggu konfirmasi kedai`]);
 
     await conn.commit();
     res.status(201).json({
@@ -237,6 +288,41 @@ const createReview = async (req, res) => {
 };
 
 // ─────────────────────────────────────────────────────────────────
+// PUBLIC — POST /api/kedai/:id/reviews (Ulasan tanpa login)
+// ─────────────────────────────────────────────────────────────────
+const createPublicReview = async (req, res) => {
+  const { id } = req.params;
+  const { nama, no_telp, rating, komentar } = req.body;
+
+  if (!nama?.trim() || !no_telp?.trim() || !komentar?.trim()) {
+    return res.status(400).json({ message: 'Nama, No Telp, dan Komentar wajib diisi' });
+  }
+
+  try {
+    const [kedai] = await pool.query('SELECT id FROM kedai WHERE id = ?', [id]);
+    if (kedai.length === 0) return res.status(404).json({ message: 'Kedai tidak ditemukan' });
+
+    await pool.query(
+      `INSERT INTO ulasan_kedai (kedai_id, nama_guest, no_telp_guest, rating, komentar)
+       VALUES (?, ?, ?, ?, ?)`,
+      [id, nama.trim(), no_telp.trim(), rating || null, komentar.trim()]);
+
+    // Update rata-rata rating kedai
+    if (rating) {
+      await pool.query(`
+        UPDATE kedai SET
+          rating       = (SELECT ROUND(AVG(rating), 2) FROM ulasan_kedai WHERE kedai_id = ? AND rating IS NOT NULL),
+          review_count = (SELECT COUNT(*) FROM ulasan_kedai WHERE kedai_id = ?)
+        WHERE id = ?`, [id, id, id]);
+    }
+
+    res.status(201).json({ message: 'Ulasan berhasil dikirim. Terima kasih!' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────
 // PUBLIC — POST /api/website-reviews  (Ulasan tanpa login)
 // Field: nama, no_telp, keterangan  (NIM & Kelas sudah dihapus)
 // ─────────────────────────────────────────────────────────────────
@@ -312,6 +398,6 @@ const markAllNotificationsRead = async (req, res) => {
 module.exports = {
   getKantinAreas, getKedai, getKedaiDetail,
   createOrder, getMyOrders, getOrderDetail,
-  createReview, createWebsiteReview, getWebsiteReviews,
+  createReview, createPublicReview, createWebsiteReview, getWebsiteReviews,
   getNotifications, markAllNotificationsRead
 };

@@ -17,7 +17,8 @@ router.post('/orders', authenticate, ctrl.createOrder);
 router.get('/orders/my', authenticate, ctrl.getMyOrders);
 router.get('/orders/:id', authenticate, ctrl.getOrderDetail);
 
-// Task 2B: Ulasan makanan/kedai setelah login
+// Task 2B: Ulasan makanan/kedai (Public & Protected)
+router.post('/kedai/:id/reviews', ctrl.createPublicReview);
 router.post('/reviews', authenticate, ctrl.createReview);
 
 // Task 6: Notifikasi

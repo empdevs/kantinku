@@ -24,7 +24,13 @@ pool.getConnection()
     conn.release();
   })
   .catch(err => {
-    console.error('❌ MySQL connection failed:', err.message);
+    console.error('\n❌ ERROR: Gagal terhubung ke MySQL!');
+    console.error('Pesan Error:', err.message);
+    console.error('\nLangkah Perbaikan:');
+    console.error('1. Pastikan XAMPP (MySQL) sudah AKTIF.');
+    console.error('2. Pastikan database "kantinku" sudah DIBUAT di phpMyAdmin.');
+    console.error('3. Periksa file "backend/.env" untuk kecocokan USER/PASSWORD.');
+    console.error('--------------------------------------------------\n');
     process.exit(1);
   });
 
