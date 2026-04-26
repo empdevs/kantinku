@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Pengembangan Sistem KantinKu - Kelompok 8</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --secondary: #2563EB;
+            --dark: #0F172A;
+            --light: #F8FAFC;
+            --accent: #F59E0B;
+        }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; padding: 0; 
+            color: var(--dark); line-height: 1.6;
+            background-color: white;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px; }
+        
+        /* Cover Page */
+        .cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            color: white;
+            padding: 40px;
+            page-break-after: always;
+        }
+        .cover-logo {
+            width: 100px; height: 100px;
+            background: var(--primary);
+            border-radius: 24px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+        }
+        .cover h1 { font-size: 3.5rem; margin: 0; font-weight: 800; letter-spacing: -1px; }
+        .cover h1 em { color: var(--primary); font-style: normal; }
+        .cover p { font-size: 1.25rem; opacity: 0.8; margin-top: 1rem; }
+        .team-info { margin-top: 4rem; text-align: left; background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); }
+        .team-info h3 { margin: 0 0 1rem 0; color: var(--primary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+        .team-info div { font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 600; }
+
+        /* Content */
+        h2 { color: var(--primary); font-size: 1.8rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; margin-top: 3rem; }
+        h3 { color: var(--secondary); margin-top: 2rem; }
+        .section { margin-bottom: 3rem; }
+        .card { background: var(--light); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--primary); margin: 1.5rem 0; }
+        
+        ul { padding-left: 1.2rem; }
+        li { margin-bottom: 0.75rem; }
+
+        .footer { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid #eee; font-size: 0.9rem; color: #64748b; text-align: center; }
+
+        @media print {
+            .container { padding: 0; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cover">
+        <div class="cover-logo">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <h1>Kantin<em>Ku</em></h1>
+        <p>Proposal Pengembangan & Pembaruan Sistem Digital Kantin Kampus</p>
+        
+        <div class="team-info">
+            <h3>Disusun Oleh: Kelompok 8</h3>
+            <div>• Ibra Nuryaman</div>
+            <div>• Rizqi Setyadi</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>1. Latar Belakang</h2>
+            <p>KantinKu adalah platform digital yang dirancang untuk mendigitalkan ekosistem kantin kampus, memberikan kemudahan bagi mahasiswa (Customer) untuk memesan makanan dan membantu pemilik stan (Merchant) dalam mengelola pesanan serta inventaris secara efisien.</p>
+            <div class="card">
+                <strong>Visi Utama:</strong> Menciptakan pengalaman kuliner kampus yang modern, cepat, dan transparan melalui integrasi teknologi terkini.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Fitur Utama & Pembaruan Sistem</h2>
+            <h3>A. Antarmuka Pengguna (UI/UX) Premium</h3>
+            <ul>
+                <li><strong>Iconography Modern:</strong> Penggunaan SVG Premium High-Fidelity di seluruh platform (Sidebar, Navbar, Dashboard) untuk tampilan yang tajam dan profesional.</li>
+                <li><strong>Responsivitas Tinggi:</strong> Layout yang adaptif untuk berbagai perangkat, memastikan kenyamanan akses dari ponsel maupun desktop.</li>
+                <li><strong>Visual Clarity:</strong> Optimalisasi gambar stan dan menu untuk mencegah pemotongan visual (clipping) pada elemen banner.</li>
+            </ul>
+
+            <h3>B. Navigasi & Filter Area</h3>
+            <ul>
+                <li><strong>Smart Filtering:</strong> Sistem filter berdasarkan lokasi kantin (Area) yang kini berfungsi secara real-time dan sinkron dengan URL.</li>
+                <li><strong>Quick Access:</strong> Akses cepat ke kategori stan (Makanan, Minuman, Snack) langsung dari halaman utama.</li>
+            </ul>
+
+            <h3>C. Manajemen Peran (Roles)</h3>
+            <ul>
+                <li><strong>Dashboard Admin:</strong> Kendali penuh atas verifikasi kedai, manajemen user, dan statistik pendapatan seluruh kantin.</li>
+                <li><strong>Dashboard Merchant:</strong> Kelola menu, status ketersediaan, dan pantau pesanan masuk secara real-time.</li>
+                <li><strong>Customer Experience:</strong> Sistem keranjang belanja yang intuitif, pemilihan waktu pengambilan (pickup), dan fitur ulasan pelanggan.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>3. Hasil Pembaruan Terkini</h2>
+            <p>Berdasarkan pengembangan terakhir, sistem telah melalui tahap optimalisasi sebagai berikut:</p>
+            <ul>
+                <li>Implementasi sistem icon berbasis SVG di seluruh modul Admin, Merchant, dan Customer.</li>
+                <li>Perbaikan bug navigasi area pada halaman utama (Home) untuk meningkatkan akurasi pencarian kedai.</li>
+                <li>Pembersihan struktur kode (Cleanup) dari file duplikat untuk meningkatkan performa sistem.</li>
+                <li>Sinkronisasi repository ke GitHub untuk kolaborasi tim yang lebih efektif.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>4. Kesimpulan</h2>
+            <p>Pembaruan sistem KantinKu saat ini telah mencapai standar estetika dan fungsionalitas yang modern. Dengan integrasi elemen visual premium dan perbaikan navigasi, platform ini siap untuk mendukung operasional kantin kampus yang lebih profesional.</p>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 KantinKu Project - Kelompok 8<br>
+            Ibra Nuryaman | Rizqi Setyadi
+        </div>
+    </div>
+</body>
+</html>
